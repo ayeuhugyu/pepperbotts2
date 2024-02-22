@@ -1,0 +1,8 @@
+prefix = "p/"
+
+[events]
+events_path = "src/events"
+commands_path = "src/commands"
+log_deleted_messages = true
+
+[commands]
