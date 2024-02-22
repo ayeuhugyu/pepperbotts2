@@ -23,9 +23,9 @@ export default {
                 name: "command",
                 description: "command to get info about",
                 required: false,
-                type: "string",
-            },
-        ],
+                type: "string"
+            }
+        ]
     },
     execute: async function (message: Message, args?): Promise<void> {
         const embed = default_embed();
@@ -48,14 +48,14 @@ export default {
                 embed.setDescription(command.default.data.description);
                 if (command.default.data.arguments) {
                     command.default.data.arguments.forEach((argument) => {
-                        let text = `
+                        const text = `
                         ${argument.description}
                         REQUIRED: ${argument.required}
                         TYPE: ${argument.type}
                         `;
                         embed.addFields({
                             name: argument.name,
-                            value: text,
+                            value: text
                         });
                     });
                 }
@@ -76,5 +76,5 @@ export default {
         }
 
         action.reply(message, { embeds: [embed] });
-    },
+    }
 };

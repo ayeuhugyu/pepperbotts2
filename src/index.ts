@@ -1,4 +1,5 @@
-require("dotenv").config()
+import dotenv from "dotenv"
+dotenv.config()
 
 import { Client, GatewayIntentBits, Events, Partials, TextChannel } from "discord.js"
 import * as log from "./lib/log.ts"
