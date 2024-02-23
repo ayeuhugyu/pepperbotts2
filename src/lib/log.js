@@ -1,14 +1,14 @@
 import chalk from "chalk"
 import * as util from "util"
 
-enum Level {
-    Debug,
-    Info,
-    Warn,
-    Error
+const Level = {
+    Debug: "Debug",
+    Info: "Info",
+    Warn: "Warn",
+    Err: "Err"
 }
 
-function levelPrefix(level: Level): string {
+function levelPrefix(level) {
     switch (level) {
         case Level.Debug:
             return chalk.gray("DBG")
@@ -16,12 +16,12 @@ function levelPrefix(level: Level): string {
             return chalk.white("INF")
         case Level.Warn:
             return chalk.yellow("WRN")
-        case Level.Error:
+        case Level.Err:
             return chalk.red("ERR")
     }
 }
 
-function format(thing: unknown): string {
+function format(thing) {
     if (typeof thing === "string") {
         return thing
     } else if (thing instanceof Error) {
@@ -31,7 +31,7 @@ function format(thing: unknown): string {
     }
 }
 
-function log(level: Level, ...message: unknown[]) {
+function log(level, ...message) {
     const formatted = message
         .map((m) => format(m))
         .reduce(
@@ -48,18 +48,18 @@ function log(level: Level, ...message: unknown[]) {
     )
 }
 
-export function debug(...message: unknown[]) {
+export function debug(...message) {
     log(Level.Debug, ...message)
 }
 
-export function info(...message: unknown[]) {
+export function info(...message) {
     log(Level.Info, ...message)
 }
 
-export function warn(...message: unknown[]) {
+export function warn(...message) {
     log(Level.Warn, ...message)
 }
 
-export function error(...message: unknown[]) {
-    log(Level.Error, ...message)
+export function error(...message) {
+    log(Level.Err, ...message)
 }

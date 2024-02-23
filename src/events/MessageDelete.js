@@ -1,13 +1,12 @@
 import fs from "fs"
-import * as log from "../lib/log"
-import type { Message } from "discord.js"
+import * as log from "../lib/log.js"
 import toml from "toml"
 
 const config = toml.parse(fs.readFileSync("config.toml", "utf-8"))
 
 export default {
     name: "messageDelete",
-    async execute(message: Message) {
+    async execute(message) {
         if (config.log_deleted_messages) {
             const author = message.author
             const authorUsername = author.username

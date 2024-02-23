@@ -1,11 +1,11 @@
-import * as action from "../lib/discord_action"
-import { Message, Collection } from "discord.js"
+import * as action from "../lib/discord_action.js"
+import { Collection } from "discord.js"
 import fs from "fs"
 import toml from "toml"
 
 const config = toml.parse(fs.readFileSync("config.toml", "utf-8"))
 
-function getArguments(message: Message) {
+function getArguments(message) {
     const args = new Collection()
     args.set("message", message.content.slice(config.prefix.length + 3))
 
@@ -25,7 +25,7 @@ export default {
             }
         ]
     },
-    execute: async function (message: Message, args?): Promise<void> {
+    execute: async function (message, args) {
         if (!args) {
             args = getArguments(message)
         }

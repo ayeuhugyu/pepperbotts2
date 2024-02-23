@@ -2,7 +2,7 @@ import dotenv from "dotenv"
 dotenv.config()
 
 import { Client, GatewayIntentBits, Events, Partials, TextChannel } from "discord.js"
-import * as log from "./lib/log.ts"
+import * as log from "./lib/log.js"
 import prettyBytes from "pretty-bytes"
 import fs from "fs"
 import toml from "toml"
@@ -36,7 +36,8 @@ async function init() {
     }
 }
 
-const eventFiles = fs.readdirSync("src/events").filter((file) => file.endsWith(".ts"))
+// wtf is this
+const eventFiles = fs.readdirSync(config.events.events_path).filter((file) => file.endsWith(".js"))
 for (const file of eventFiles) {
     (async () => {
         const event = await import(`./events/${file}`)
@@ -47,7 +48,7 @@ for (const file of eventFiles) {
 client.on(Events.ClientReady, async () => {
     log.info("bot online")
 
-    const channel: TextChannel | undefined = await client.channels.cache.get("1148814162273763418") as TextChannel
+    const channel = await client.channels.cache.get("1148814162273763418")
     if (channel) {
         channel.send("its pepper time 🌶 <@&1210034891018993755>")
     } else {
@@ -62,8 +63,13 @@ client.on(Events.ClientReady, async () => {
     log.debug(`${prettyBytes(memory.rss)} memory usage, ${prettyBytes(memory.heapUsed)} / ${prettyBytes(memory.heapTotal)} heap usage`)
 })
 
-process.on("uncaughtException", (err) => {
+/*process.on("uncaughtException", (err) => {
+    log.error("uncaught exception")
     log.error(err)
+})*/
+
+process.on("exit", () => {
+    log.info("exiting pepperbot")
 })
 
 init()

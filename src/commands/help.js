@@ -1,12 +1,12 @@
-import * as action from "../lib/discord_action";
-import { Message, Collection } from "discord.js";
-import default_embed from "../lib/default_embed";
+import * as action from "../lib/discord_action.js";
+import { Collection } from "discord.js";
+import default_embed from "../lib/default_embed.js";
 import fs from "fs";
 import toml from "toml";
 
 const config = toml.parse(fs.readFileSync("config.toml", "utf-8"));
 
-function getArguments(message: Message) {
+function getArguments(message) {
     const args = new Collection();
     args.set("command", message.content.slice(config.prefix.length + 4));
 
@@ -27,15 +27,16 @@ export default {
             }
         ]
     },
-    execute: async function (message: Message, args?): Promise<void> {
+    execute: async function (message, args) {
         const embed = default_embed();
         if (!args) {
             args = getArguments(message);
         }
         if (args.get("command")) {
+            // reply with command info
             const commandFiles = fs
                 .readdirSync("src/commands/")
-                .filter((file) => file.endsWith(".ts"));
+                .filter((file) => file.endsWith(".js"));
             let commandString = args.get("command");
             if (commandString.startsWith(config.prefix)) {
                 args.set("command", commandString.slice(config.prefix.length));
@@ -43,8 +44,8 @@ export default {
             }
             args.set("command", commandString.replace(" ", ""));
             embed.setTitle(args.get("command"));
-            if (commandFiles.includes(`${args.get("command")}.ts`)) {
-                const command = await import(`./${args.get("command")}.ts`);
+            if (commandFiles.includes(`${args.get("command")}.js`)) {
+                const command = await import(`./${args.get("command")}.js`);
                 embed.setDescription(command.default.data.description);
                 if (command.default.data.arguments) {
                     command.default.data.arguments.forEach((argument) => {
@@ -67,7 +68,7 @@ export default {
 
             const commandFiles = fs
                 .readdirSync("src/commands/")
-                .filter((file) => file.endsWith(".ts"));
+                .filter((file) => file.endsWith(".js"));
             for (const file of commandFiles) {
                 const command = await import(`./${file}`);
                 text += `p/${command.default.data.name}\n`;

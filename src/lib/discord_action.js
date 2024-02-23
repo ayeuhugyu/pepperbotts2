@@ -1,13 +1,13 @@
-import discord from "discord.js"
+import discord, { ApplicationCommandOptionWithChoicesAndAutocompleteMixin } from "discord.js"
 import { client } from "../index.js"
-import * as log from "../lib/log"
+import * as log from "./log.js"
 
-export async function sendMessage(channel: discord.TextChannel | number | string, content) {
+export async function sendMessage(channel, content) {
     if (typeof channel === "string") {
         channel = channel.toString()
     }
     if (!(channel instanceof discord.TextChannel)) {
-        channel = await (client.channels.fetch(channel.toString()) as Promise<discord.TextChannel>)
+        channel = await (client.channels.fetch(channel.toString()))
     }
     try {
         channel.sendTyping()
@@ -18,7 +18,7 @@ export async function sendMessage(channel: discord.TextChannel | number | string
     }
 }
 
-export async function reply(message: discord.Message | discord.CommandInteraction, content) {
+export async function reply(message, content) {
     try {
         if (message.channel == null) {
             return
@@ -31,7 +31,24 @@ export async function reply(message: discord.Message | discord.CommandInteractio
     }
 }
 
-export async function deleteMessage(message: discord.Message) {
+export async function sendDM(user, content) {
+    try {
+        const usersCache = client.users.cache
+        if (typeof user === "number") {
+            user = user.toString()
+        }
+        if (typeof user === "string") {
+            user = usersCache.get(user)
+        }
+
+        const msg = await user.send(content)
+        return msg
+    } catch (err) {
+        log.error(err)
+    }
+}
+
+export async function deleteMessage(message) {
     try {
         message.delete()
     } catch (err) {
@@ -39,7 +56,7 @@ export async function deleteMessage(message: discord.Message) {
     }
 }
 
-export async function editMessage(message: discord.Message, content) {
+export async function editMessage(message, content) {
     try {
         message.channel.sendTyping()
         const sent = message.edit(content)

@@ -1,7 +1,6 @@
-import { Message } from "discord.js"
 import prettyBytes from "pretty-bytes"
-import default_embed from "../lib/default_embed"
-import * as action from "../lib/discord_action"
+import default_embed from "../lib/default_embed.js"
+import * as action from "../lib/discord_action.js"
 
 async function convertMilisecondsToReadable(time) {
     let string = ""
@@ -30,7 +29,7 @@ export default {
         name: "info",
         description: "returns info about current bot instance"
     },
-    execute: async (message: Message) => {
+    execute: async (message) => {
         const memory = process.memoryUsage()
 
         const embed = default_embed()
@@ -44,7 +43,7 @@ export default {
                     name: "system info",
                     value: `${process.platform} ${process.arch}`
                 },
-                { name: "bun version", value: Bun.version },
+                { name: "n*de version (🤢)", value: process.version },
                 {
                     name: "memory usage",
                     value: `${prettyBytes(

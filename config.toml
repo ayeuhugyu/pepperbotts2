@@ -6,3 +6,5 @@ commands_path = "src/commands"
 log_deleted_messages = true
 
 [commands]
+vile_imagery_path = "resources/vileimagery"
+pepper_path = "resources/the_peppers"
